@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="jp">
+  <head>
+    <!-- meta -->
+    <meta charset="UTF-8">
+    <title><%- @head?.title %></title>
+    <!-- meta Extend -->
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+
+    <!-- JavaScript -->
+
+    <% content 'head_info' %>
+
+  </head>
+  <body>
+    <% include 'header.ect' %>
+    <% content %>
+    <% include 'footer.ect' %>
+
+    <!-- JavaScript -->
+
+  </body>
+</html>
