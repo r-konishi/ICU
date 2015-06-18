@@ -1,2 +1,7 @@
 <% extend 'layout.ect' %>
+<% block 'head_info' : %>
+<script type="application/javascript" src="/javascripts/ICU.js"></script>
+<% end %>
+
 <h1><%= @body?.h1 %></h1>
+<div class="ICU-canvas"></div>
