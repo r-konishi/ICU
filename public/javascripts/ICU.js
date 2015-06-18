@@ -136,6 +136,48 @@
 		
 		var ICUObject = canvas.parentNode;
 		ICUObject.parentNode.insertBefore(imageObject, ICUObject.nextSibling);
+		
+		var base64 = imageObject.src.replace(/^data:image\/(png|jpeg);base64,/, "");
+		console.log(base64ToBlob(base64));
+	};
+	
+	/**
+	 * base64 data string to Blob
+	 * @param {String} base64
+	 */
+	var base64ToBlob = function(base64) {
+	    var bin = atob(base64.replace(/^.*,/, ''));
+	    var buffer = new Uint8Array(bin.length);
+	    for (var i = 0; i < bin.length; i++) {
+	        buffer[i] = bin.charCodeAt(i);
+	    }
+		
+		var blob;
+		var byteArrays = [buffer.buffer];
+		
+		try{
+	       blob = new Blob(byteArrays, {type: PARAMS.IMAGE_TYPE});
+	    } catch(error) {
+	        // TypeError old chrome and FF
+	        window.BlobBuilder = window.BlobBuilder || 
+	                             window.WebKitBlobBuilder || 
+	                             window.MozBlobBuilder || 
+	                             window.MSBlobBuilder;
+	        if(error.name === 'TypeError' && window.BlobBuilder) {
+	            var bb = new BlobBuilder();
+	            bb.append(byteArrays);
+	            blob = bb.getBlob(PARAMS.IMAGE_TYPE);
+	        } else if(error.name === "InvalidStateError") {
+	            // InvalidStateError (tested on FF13 WinXP)
+	            blob = new Blob(byteArrays, {type: PARAMS.IMAGE_TYPE});
+	        } else {
+	            // We're screwed, blob constructor unsupported entirely
+				alert('Ooooooooooooops!');
+				return false;   
+	        }
+	    }
+		
+	    return blob;
 	};
 	
 	/**
