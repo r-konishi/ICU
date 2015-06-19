@@ -132,13 +132,9 @@
 		var imageObject = document.createElement('img');
 		imageObject.src = outputImage;
 		
-		imageObject.style.border = '1px solid #000000';
-		
-		var ICUObject = canvas.parentNode;
-		ICUObject.parentNode.insertBefore(imageObject, ICUObject.nextSibling);
-		
-		var base64 = imageObject.src.replace(/^data:image\/(png|jpeg);base64,/, "");
-		console.log(base64ToBlob(base64));
+		var base64 = imageObject.src.replace(/^data:image\/(png|jpeg);base64,/, '');
+		var blob = base64ToBlob(base64);
+		uploadImage(blob, canvas.parentNode);
 	};
 	
 	/**
@@ -178,6 +174,55 @@
 	    }
 		
 	    return blob;
+	};
+	
+	var uploadImage = function(blob, ICUObject) {
+		var formData = new FormData();
+		formData.append('image', blob);
+		
+		var xhr = new XMLHttpRequest();
+    
+	    xhr.open('post', '/api/uploadImage', true);
+		
+		xhr.upload.addEventListener('progress', function(event) {
+			if (event.lengthComputable) {
+				var percentage = (event.loaded / event.total) * 100;
+				console.log(percentage + '%');
+			}
+		});
+		
+		xhr.addEventListener('readystatechange', function(e) {
+			if( this.readyState === 4 ) {
+				console.log(xhr.response);
+				var data = {};
+				try {
+					JSON.parse(xhr.responseText, function(key, value) {
+						if(key !== '') {
+							data[key] = value;
+						} else {
+							result(data, ICUObject);
+						}
+					});
+				} catch(e) {
+					alert('Ooooooooooooops!');
+				}
+			}
+		});
+	    
+	    xhr.send(formData);
+	};
+	
+	var result = function(jsonResult, ICUObject) {
+		if(jsonResult.status === 'success') {
+			var imageObject = document.createElement('img');
+			imageObject.src = '/images/' + jsonResult.fileName;
+			
+			imageObject.style.border = '1px solid #000000';
+			
+			ICUObject.parentNode.insertBefore(imageObject, ICUObject.nextSibling);
+		} else {
+			alert('Ooooooooooooops!');
+		}
 	};
 	
 	/**
