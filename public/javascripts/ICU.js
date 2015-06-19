@@ -70,7 +70,7 @@
 			
 			if(ICUObject.dataset.message !== undefined) {
 				var text = document.createTextNode(ICUObject.dataset.message);
-				ICUObject.appendChild(text);
+				DDObject.appendChild(text);
 			}
 		}
 	};
