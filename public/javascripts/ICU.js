@@ -53,6 +53,9 @@
 		var obj = document.createElement('canvas');
 		for(var i = 0; i < ICUObjs.length; i++) {
 			var ICUObject = ICUObjs[i];
+			
+			
+			
 			ICUObject.appendChild(obj);
 			ICUObject.appendChild(document.createElement('div'));
 			var ICUCanvas = ICUObject.getElementsByTagName('canvas').item(0);
@@ -62,6 +65,13 @@
 			
 			ICUObject.addEventListener('dragover', dragOverEventListener, true);
 			ICUObject.addEventListener('drop', dropEventListener, true);
+			
+			var DDObject = ICUObject.getElementsByClassName(ICU_CLASS_NAME.DD_OBJECT).item(0);
+			
+			if(ICUObject.dataset.message !== undefined) {
+				var text = document.createTextNode(ICUObject.dataset.message);
+				ICUObject.appendChild(text);
+			}
 		}
 	};
 	
